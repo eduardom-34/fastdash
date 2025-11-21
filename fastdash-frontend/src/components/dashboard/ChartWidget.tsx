@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card';
 import type { DashboardWidget } from '@/types';
 import { 
   BarChart, Bar, LineChart, Line, PieChart, Pie, AreaChart, Area,
+  ScatterChart, Scatter, ZAxis,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import { Loader2 } from 'lucide-react';
@@ -158,6 +159,46 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
                 strokeWidth={2}
               />
             </AreaChart>
+          </ResponsiveContainer>
+        );
+
+      case 'scatter':
+        return (
+          <ResponsiveContainer width="100%" height={300}>
+            <ScatterChart>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis 
+                type="number"
+                dataKey={xAxisKey} 
+                name={xAxisKey}
+                stroke="hsl(var(--muted-foreground))"
+                tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              />
+              <YAxis 
+                type="number"
+                dataKey={yAxisKey} 
+                name={yAxisKey}
+                stroke="hsl(var(--muted-foreground))"
+                tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              />
+              <ZAxis range={[60, 400]} />
+              <Tooltip 
+                cursor={{ strokeDasharray: '3 3' }}
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '0.5rem'
+                }}
+              />
+              <Legend />
+              <Scatter 
+                name={`${yAxisKey} vs ${xAxisKey}`}
+                data={widget.data} 
+                fill="hsl(var(--chart-1))"
+                line={{ stroke: 'hsl(var(--chart-2))', strokeWidth: 1 }}
+                lineType="joint"
+              />
+            </ScatterChart>
           </ResponsiveContainer>
         );
 
