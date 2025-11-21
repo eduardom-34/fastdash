@@ -4,13 +4,14 @@ import { UploadProgress } from '@/components/upload/UploadProgress';
 import { SuggestionCard } from '@/components/analysis/SuggestionCard';
 import { ChartWidget } from '@/components/dashboard/ChartWidget';
 import type { AIAnalysisSuggestion, DashboardWidget } from '@/types';
-import { mockUploadFile, mockGetChartData } from '@/services/apiMock';
+import { uploadFile, getChartData } from '@/services/api';
 import { LayoutDashboard, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DashboardBuilder = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
+  const [fileId, setFileId] = useState<string>('');
   const [suggestions, setSuggestions] = useState<AIAnalysisSuggestion[]>([]);
   const [widgets, setWidgets] = useState<DashboardWidget[]>([]);
   const [loadingWidgets, setLoadingWidgets] = useState<Set<string>>(new Set());
@@ -20,14 +21,20 @@ const DashboardBuilder = () => {
     setUploadedFileName(file.name);
     
     try {
-      const aiSuggestions = await mockUploadFile(file);
-      setSuggestions(aiSuggestions);
+      const response = await uploadFile(file);
+      
+      // Guardar file_id y filename para usar en las consultas de gráficos
+      setFileId(response.file_id);
+      setUploadedFileName(response.filename);
+      setSuggestions(response.suggestions);
+      
       toast.success('¡Análisis completado!', {
-        description: `Se encontraron ${aiSuggestions.length} insights valiosos en tus datos.`
+        description: response.summary || `Se encontraron ${response.suggestions.length} insights valiosos en tus datos.`
       });
     } catch (error) {
+      console.error('Error al subir archivo:', error);
       toast.error('Error al analizar el archivo', {
-        description: 'Por favor, intenta nuevamente.'
+        description: error instanceof Error ? error.message : 'Por favor, intenta nuevamente.'
       });
     } finally {
       setIsUploading(false);
@@ -35,10 +42,19 @@ const DashboardBuilder = () => {
   };
 
   const handleAddSuggestion = async (suggestion: AIAnalysisSuggestion) => {
-    setLoadingWidgets(prev => new Set(prev).add(suggestion.id));
+    if (!suggestion.id) return;
+    
+    setLoadingWidgets(prev => new Set(prev).add(suggestion.id!));
     
     try {
-      const chartData = await mockGetChartData(suggestion.id, suggestion.parameters);
+      // Llamar al backend para obtener los datos del gráfico
+      const chartData = await getChartData({
+        file_id: fileId,
+        filename: uploadedFileName,
+        x_axis: suggestion.parameters.x_axis,
+        y_axis: suggestion.parameters.y_axis,
+        chart_type: suggestion.chart_type,
+      });
       
       const newWidget: DashboardWidget = {
         ...suggestion,
@@ -50,11 +66,14 @@ const DashboardBuilder = () => {
         description: suggestion.title
       });
     } catch (error) {
-      toast.error('Error al cargar los datos del gráfico');
+      console.error('Error al cargar datos del gráfico:', error);
+      toast.error('Error al cargar los datos del gráfico', {
+        description: error instanceof Error ? error.message : 'Intenta nuevamente'
+      });
     } finally {
       setLoadingWidgets(prev => {
         const newSet = new Set(prev);
-        newSet.delete(suggestion.id);
+        newSet.delete(suggestion.id!);
         return newSet;
       });
     }
@@ -115,7 +134,7 @@ const DashboardBuilder = () => {
                     key={suggestion.id}
                     suggestion={suggestion}
                     onAdd={handleAddSuggestion}
-                    isAdded={isWidgetAdded(suggestion.id)}
+                    isAdded={isWidgetAdded(suggestion.id || '')}
                   />
                 ))}
               </div>

@@ -20,6 +20,10 @@ const COLORS = [
 ];
 
 export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
+  // Obtener los nombres de las columnas desde los parámetros del widget
+  const xAxisKey = widget.parameters.x_axis;
+  const yAxisKey = widget.parameters.y_axis;
+
   const renderChart = () => {
     if (isLoading) {
       return (
@@ -36,7 +40,7 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
             <BarChart data={widget.data}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis 
-                dataKey="name" 
+                dataKey={xAxisKey} 
                 stroke="hsl(var(--muted-foreground))"
                 tick={{ fill: 'hsl(var(--muted-foreground))' }}
               />
@@ -52,7 +56,7 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
                 }}
               />
               <Legend />
-              <Bar dataKey="value" fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]} />
+              <Bar dataKey={yAxisKey} fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         );
@@ -63,7 +67,7 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
             <LineChart data={widget.data}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis 
-                dataKey="name" 
+                dataKey={xAxisKey} 
                 stroke="hsl(var(--muted-foreground))"
                 tick={{ fill: 'hsl(var(--muted-foreground))' }}
               />
@@ -81,20 +85,11 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
               <Legend />
               <Line 
                 type="monotone" 
-                dataKey="value" 
+                dataKey={yAxisKey} 
                 stroke="hsl(var(--chart-1))" 
                 strokeWidth={3}
                 dot={{ fill: 'hsl(var(--chart-1))', r: 4 }}
               />
-              {widget.data[0]?.target && (
-                <Line 
-                  type="monotone" 
-                  dataKey="target" 
-                  stroke="hsl(var(--chart-2))" 
-                  strokeWidth={2}
-                  strokeDasharray="5 5"
-                />
-              )}
             </LineChart>
           </ResponsiveContainer>
         );
@@ -108,10 +103,15 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                label={(entry: any) => {
+                  const name = entry[xAxisKey];
+                  const percent = entry.percent ?? 0;
+                  return `${name} ${(percent * 100).toFixed(0)}%`;
+                }}
                 outerRadius={100}
                 fill="hsl(var(--chart-1))"
-                dataKey="value"
+                dataKey={yAxisKey}
+                nameKey={xAxisKey}
               >
                 {widget.data.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -134,7 +134,7 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
             <AreaChart data={widget.data}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis 
-                dataKey="name" 
+                dataKey={xAxisKey} 
                 stroke="hsl(var(--muted-foreground))"
                 tick={{ fill: 'hsl(var(--muted-foreground))' }}
               />
@@ -152,7 +152,7 @@ export const ChartWidget = ({ widget, isLoading }: ChartWidgetProps) => {
               <Legend />
               <Area 
                 type="monotone" 
-                dataKey="value" 
+                dataKey={yAxisKey} 
                 stroke="hsl(var(--chart-1))" 
                 fill="hsl(var(--chart-1) / 0.2)"
                 strokeWidth={2}

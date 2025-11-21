@@ -1,15 +1,98 @@
-# React + TypeScript + Vite
+# 🚀 FastDash Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FastDash es un constructor de dashboards inteligente que utiliza IA para analizar archivos CSV/Excel y generar visualizaciones automáticas con insights valiosos.
 
-Currently, two official plugins are available:
+## 🌟 Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📊 **Análisis Automático con IA**: Sube tu archivo y recibe sugerencias inteligentes de visualizaciones
+- 📈 **Múltiples Tipos de Gráficos**: Bar, Line, Pie, Area, Scatter
+- 🎨 **UI Moderna**: Diseño limpio y profesional con Tailwind CSS
+- ⚡ **Rápido y Responsivo**: Construido con React + Vite
+- 🔌 **Integración con Backend**: Conexión directa con API FastAPI
 
-## React Compiler
+## 🛠️ Stack Tecnológico
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **React 18** con TypeScript
+- **Vite** para desarrollo rápido
+- **Tailwind CSS** para estilos
+- **Recharts** para visualizaciones
+- **Shadcn/ui** para componentes UI
+- **Sonner** para notificaciones
+- **React Router** para navegación
+
+## 🚦 Inicio Rápido
+
+### Prerrequisitos
+
+- Node.js 18+ 
+- npm o yarn
+- Backend de FastDash corriendo en `http://localhost:8000`
+
+### Instalación
+
+```bash
+# Clonar el repositorio
+cd fastdash-frontend
+
+# Instalar dependencias
+npm install
+
+# (Opcional) Configurar URL del backend
+# Crea un archivo .env con:
+# VITE_API_BASE_URL=http://localhost:8000
+
+# Iniciar el servidor de desarrollo
+npm run dev
+```
+
+El frontend estará disponible en `http://localhost:5173`
+
+### Scripts Disponibles
+
+```bash
+npm run dev          # Inicia el servidor de desarrollo
+npm run build        # Construye para producción
+npm run preview      # Preview de la build de producción
+npm run lint         # Ejecuta ESLint
+```
+
+## 📚 Documentación
+
+Para información detallada sobre la integración con el backend, consulta:
+- [BACKEND_INTEGRATION.md](./BACKEND_INTEGRATION.md) - Documentación completa de la integración
+
+## 🔌 Integración con Backend
+
+El frontend se conecta automáticamente al backend en `http://localhost:8000`. 
+
+**Endpoints utilizados:**
+- `POST /upload` - Subir archivo y obtener sugerencias de IA
+- `GET /chart-data` - Obtener datos procesados para gráficos
+
+Para más detalles sobre el flujo de integración, consulta [BACKEND_INTEGRATION.md](./BACKEND_INTEGRATION.md)
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── components/        # Componentes React
+│   ├── analysis/     # Tarjetas de sugerencias
+│   ├── dashboard/    # Widgets de gráficos
+│   ├── upload/       # Componentes de carga
+│   └── ui/          # Componentes UI base
+├── pages/           # Páginas principales
+├── services/        # Servicios de API
+├── types/          # Definiciones TypeScript
+├── hooks/          # Custom hooks
+└── lib/            # Utilidades
+```
+
+## 🎨 Componentes Principales
+
+- **FileUploader**: Carga de archivos con drag & drop
+- **SuggestionCard**: Muestra sugerencias de la IA
+- **ChartWidget**: Renderiza gráficos dinámicos
+- **DashboardBuilder**: Página principal del builder
 
 ## Expanding the ESLint configuration
 
