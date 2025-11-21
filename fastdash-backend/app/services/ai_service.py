@@ -14,10 +14,11 @@ class AIService:
         
         REGLAS:
         1. Devuelve SOLO un objeto JSON con una clave "suggestions" que sea una lista.
-        2. Los tipos de gráfico permitidos son: "bar", "line", "pie", "scatter".
-        3. El campo 'insight' debe ser una frase breve y clara en español explicando qué muestra el gráfico.
-        4. El campo 'parameters' debe contener 'x_axis' y 'y_axis' basados EXACTAMENTE en los nombres de columnas provistos.
-        5. Elige columnas numéricas para el eje Y y categóricas/temporales para el eje X (excepto en scatter).
+        2. Cada sugerencia DEBE tener un campo 'title' (título corto y descriptivo).
+        3. Cada sugerencia DEBE tener un campo 'chart_type'. Los valores permitidos son: "bar", "line", "pie", "scatter".
+        4. El campo 'insight' debe ser una frase breve y clara en español explicando qué muestra el gráfico.
+        5. El campo 'parameters' debe contener 'x_axis' y 'y_axis' basados EXACTAMENTE en los nombres de columnas provistos.
+        6. Elige columnas numéricas para el eje Y y categóricas/temporales para el eje X (excepto en scatter).
         """
 
         user_prompt = f"""
