@@ -141,3 +141,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  }
+
+  .bg-gradient-success {
+    background: linear-gradient(135deg, hsl(var(--secondary)), hsl(160 75% 60%));
+  }
+
+  .bg-gradient-dashboard {
+    background: linear-gradient(180deg, hsl(var(--background)), hsl(220 20% 96%));
+  }
+
+  .shadow-card {
+    box-shadow: 0 2px 8px -2px hsl(var(--primary) / 0.1);
+  }
+
+  .shadow-elevated {
+    box-shadow: 0 8px 24px -4px hsl(var(--primary) / 0.15);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 24px hsl(var(--primary-glow) / 0.3);
+  }
+}
