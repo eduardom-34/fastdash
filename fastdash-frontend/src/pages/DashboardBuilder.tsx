@@ -3,7 +3,7 @@ import { FileUploader } from '@/components/upload/FileUploader';
 import { UploadProgress } from '@/components/upload/UploadProgress';
 import { SuggestionCard } from '@/components/analysis/SuggestionCard';
 import { ChartWidget } from '@/components/dashboard/ChartWidget';
-import { AIAnalysisSuggestion, DashboardWidget } from '@/types';
+import type { AIAnalysisSuggestion, DashboardWidget } from '@/types';
 import { mockUploadFile, mockGetChartData } from '@/services/apiMock';
 import { LayoutDashboard, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
